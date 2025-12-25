@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔥 WhatsApp Reaction Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .status-box {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .status-ready {
+            background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+        
+        .status-not-ready {
+            background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
+        }
+        
+        .status-error {
+            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+            font-size: 15px;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background: #f9f9f9;
+        }
+        
+        .form-group input:focus {
+            border-color: #667eea;
+            background: white;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            min-height: 100px;
+            resize: vertical;
+            background: #f9f9f9;
+        }
+        
+        .form-group textarea:focus {
+            border-color: #667eea;
+            background: white;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .result-box {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        
+        .result-success {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            border: 2px solid #155724;
+            color: #155724;
+        }
+        
+        .result-error {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            border: 2px solid #721c24;
+            color: #721c24;
+        }
+        
+        .info-box {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        
+        .url-example {
+            background: #fff3cd;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-family: monospace;
+            font-size: 12px;
+            word-break: break-all;
+        }
+        
+        .emoji-example {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .emoji-btn {
+            font-size: 24px;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            background: white;
+            transition: all 0.2s;
+        }
+        
+        .emoji-btn:hover {
+            border-color: #667eea;
+            transform: scale(1.1);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .qr-section {
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .qr-section img {
+            max-width: 200px;
+            margin: 10px auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔥 WHATSAPP REACTION HUB</h1>
+            <p>Kirim reaction ke chat WhatsApp dengan emoji kustom</p>
+        </div>
+        
+        <!-- Status WhatsApp Connection -->
+        <div id="statusBox" class="status-box status-not-ready">
+            <span id="statusText">🔄 Mengecek koneksi WhatsApp...</span>
+        </div>
+        
+        <!-- QR Code Section (tampil jika belum connect) -->
+        <div id="qrSection" class="qr-section">
+            <h3>📱 SCAN QR CODE</h3>
+            <p>Buka WhatsApp > Menu ⋮ > Linked Devices > Link a Device</p>
+            <div id="qrImage"></div>
+            <p>Setelah scan, status akan otomatis berubah</p>
+            <button onclick="checkStatus()" class="btn" style="background: #4CAF50; margin-top: 15px;">
+                🔄 Cek Status Lagi
+            </button>
+        </div>
+        
+        <!-- Main Form -->
+        <div id="mainForm">
+            <div class="form-group">
+                <label>🔗 URL Chat WhatsApp:</label>
+                <input type="text" id="chatUrl" placeholder="Contoh: https://wa.me/6281234567890">
+                <div class="info-box">
+                    <strong>Cara dapatkan URL:</strong>
+                    <p>1. <strong>Untuk chat pribadi:</strong> Buka wa.me/nomorkamu</p>
+                    <p>2. <strong>Untuk grup:</strong> Buka chat.whatsapp.com/linkgrupmu</p>
+                    <div class="url-example">
+                        Contoh URL yang valid:<br>
+                        • https://wa.me/6281234567890<br>
+                        • https://chat.whatsapp.com/ABC123def456
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>😎 Emoji (pisah dengan koma):</label>
+                <input type="text" id="emojis" placeholder="Contoh: 😂, 🥰, 😎, 🤡" value="😂, 🥰, 😎">
+                <div class="emoji-example">
+                    <span class="emoji-btn" onclick="addEmoji('😂')">😂</span>
+                    <span class="emoji-btn" onclick="addEmoji('🥰')">🥰</span>
+                    <span class="emoji-btn" onclick="addEmoji('😎')">😎</span>
+                    <span class="emoji-btn" onclick="addEmoji('🤡')">🤡</span>
+                    <span class="emoji-btn" onclick="addEmoji('🔥')">🔥</span>
+                    <span class="emoji-btn" onclick="addEmoji('💯')">💯</span>
+                    <span class="emoji-btn" onclick="addEmoji('🎉')">🎉</span>
+                    <span class="emoji-btn" onclick="addEmoji('❤️')">❤️</span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>🔢 Jumlah Reaction:</label>
+                <input type="number" id="count" value="3" min="1" max="20">
+                <div class="info-box">
+                    <strong>Note:</strong> Maksimal 20 reaction sekaligus<br>
+                    Setiap reaction ada jeda 1 detik
+                </div>
+            </div>
+            
+            <button id="sendBtn" class="btn" onclick="sendReaction()">
+                🚀 KIRIM REACTION
+            </button>
+            
+            <div id="resultBox" class="result-box"></div>
+        </div>
+        
+        <!-- Info Backend -->
+        <div class="info-box">
+            <strong>⚙️ Backend Status:</strong>
+            <div id="backendInfo">Menghubungkan ke server...</div>
+        </div>
+    </div>
+
+    <script>
+        // 🎯 KONFIGURASI
+        const API_BASE = window.location.origin; // Otomatis pakai domain yang sama
+        
+        // 🚨 FUNGSI UTAMA
+        async function checkStatus() {
+            try {
+                const response = await fetch(`${API_BASE}/api/status`);
+                const data = await response.json();
+                
+                const statusBox = document.getElementById('statusBox');
+                const statusText = document.getElementById('statusText');
+                const qrSection = document.getElementById('qrSection');
+                const mainForm = document.getElementById('mainForm');
+                const sendBtn = document.getElementById('sendBtn');
+                
+                if (data.ready) {
+                    // WhatsApp READY
+                    statusText.innerHTML = '✅ WHATSAPP SIAP! Bisa kirim reaction.';
+                    statusBox.className = 'status-box status-ready';
+                    qrSection.style.display = 'none';
+                    mainForm.style.display = 'block';
+                    sendBtn.disabled = false;
+                    
+                    document.getElementById('backendInfo').innerHTML = 
+                        `<span style="color: green;">●</span> Server aktif & WhatsApp terhubung`;
+                        
+                } else {
+                    // WhatsApp NOT READY, tampilkan QR
+                    statusText.innerHTML = '⚠️ SCAN QR CODE untuk menghubungkan WhatsApp';
+                    statusBox.className = 'status-box status-not-ready';
+                    mainForm.style.display = 'none';
+                    sendBtn.disabled = true;
+                    
+                    // Tampilkan QR code
+                    if (data.hasQr) {
+                        qrSection.style.display = 'block';
+                        getQRCode();
+                    } else {
+                        statusText.innerHTML = '🔄 Menunggu QR code...';
+                        setTimeout(checkStatus, 2000);
+                    }
+                }
+                
+            } catch (error) {
+                console.error('Status check error:', error);
+                document.getElementById('statusBox').className = 'status-box status-error';
+                document.getElementById('statusText').innerHTML = 
+                    '❌ Gagal terhubung ke server. Pastikan backend aktif!';
+            }
+        }
+        
+        // 📱 Ambil QR Code
+        async function getQRCode() {
+            try {
+                const response = await fetch(`${API_BASE}/api/qr`);
+                const data = await response.json();
+                
+                if (data.hasQr && data.qr) {
+                    document.getElementById('qrImage').innerHTML = 
+                        `<img src="${data.qr}" alt="WhatsApp QR Code">`;
+                }
+            } catch (error) {
+                console.error('QR error:', error);
+            }
+        }
+        
+        // 📤 Kirim Reaction
+        async function sendReaction() {
+            // Ambil data dari form
+            const chatUrl = document.getElementById('chatUrl').value.trim();
+            const emojis = document.getElementById('emojis').value.trim();
+            const count = document.getElementById('count').value;
+            
+            // Validasi
+            if (!chatUrl) {
+                showResult('❌ Masukkan URL chat WhatsApp!', false);
+                return;
+            }
+            
+            if (!emojis) {
+                showResult('❌ Masukkan emoji!', false);
+                return;
+            }
+            
+            if (!count || count < 1) {
+                showResult('❌ Masukkan jumlah reaction yang valid!', false);
+                return;
+            }
+            
+            // Validasi format emoji
+            if (!emojis.includes(',')) {
+                if (confirm('Format emoji harus dipisah koma. Contoh: 😂, 🥰, 😎\n\nTambahkan koma otomatis?')) {
+                    document.getElementById('emojis').value = emojis.split(' ').join(', ');
+                    return;
+                }
+            }
+            
+            // Tampilkan loading
+            const sendBtn = document.getElementById('sendBtn');
+            const originalText = sendBtn.innerHTML;
+            sendBtn.innerHTML = '<div class="loading"></div> Mengirim...';
+            sendBtn.disabled = true;
+            
+            // Siapkan result box
+            const resultBox = document.getElementById('resultBox');
+            resultBox.style.display = 'block';
+            resultBox.innerHTML = `
+                <div style="text-align: center;">
+                    <h3>⏳ MENGIRIM REACTION...</h3>
+                    <p>Jangan tutup halaman ini!</p>
+                    <p>Target: <code>${chatUrl.substring(0, 50)}...</code></p>
+                    <p>Emoji: ${emojis}</p>
+                    <p>Jumlah: ${count}x</p>
+                </div>
+            `;
+            resultBox.className = 'result-box';
+            
+            // Kirim request ke backend
+            try {
+                const response = await fetch(`${API_BASE}/api/send-reaction`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        chatUrl: chatUrl,
+                        emojis: emojis,
+                        count: parseInt(count)
+                    })
+                });
+                
+                const result = await response.json();
+                
+                // Tampilkan hasil
+                if (result.success) {
+                    let detailsHtml = '';
+                    
+                    if (result.results && result.results.length > 0) {
+                        detailsHtml = '<div style="margin-top: 15px;"><strong>Detail:</strong><ul style="margin-top: 10px;">';
+                        result.results.forEach(r => {
+                            const statusIcon = r.status.includes('sent') ? '✅' : '❌';
+                            detailsHtml += `<li>${statusIcon} Reaction ${r.number}: ${r.emoji} - ${r.status}</li>`;
+                        });
+                        detailsHtml += '</ul></div>';
+                    }
+                    
+                    resultBox.innerHTML = `
+                        <div style="color: #155724;">
+                            <h3 style="color: #155724;">🎉 BERHASIL!</h3>
+                            <p><strong>${result.message}</strong></p>
+                            <p>Dikirim ke: <code>${result.target}</code></p>
+                            <p>Total: ${result.sent} berhasil, ${result.failed} gagal</p>
+                            ${detailsHtml}
+                            <p style="margin-top: 15px; font-size: 12px; color: #666;">
+                                ⚡ Reaction dikirim dengan jeda 1 detik
+                            </p>
+                        </div>
+                    `;
+                    resultBox.className = 'result-box result-success';
+                    
+                } else {
+                    resultBox.innerHTML = `
+                        <div style="color: #721c24;">
+                            <h3>❌ GAGAL</h3>
+                            <p><strong>Error:</strong> ${result.error}</p>
+                            <div style="margin-top: 15px; padding: 10px; background: #f8d7da; border-radius: 5px;">
+                                <strong>Perbaiki:</strong>
+                                <ul style="margin-top: 5px; padding-left: 20px;">
+                                    <li>Pastikan WhatsApp sudah terhubung</li>
+                                    <li>Gunakan URL WhatsApp yang valid</li>
+                                    <li>Jangan lebih dari 20 reaction</li>
+                                    <li>Pastikan nomor/grup aktif</li>
+                                </ul>
+                            </div>
+                        </div>
+                    `;
+                    resultBox.className = 'result-box result-error';
+                }
+                
+            } catch (error) {
+                resultBox.innerHTML = `
+                    <div style="color: #721c24;">
+                        <h3>❌ ERROR KONEKSI</h3>
+                        <p><strong>Detail:</strong> ${error.message}</p>
+                        <p>Pastikan backend server aktif dan bisa diakses</p>
+                    </div>
+                `;
+                resultBox.className = 'result-box result-error';
+                
+            } finally {
+                // Reset button
+                sendBtn.innerHTML = originalText;
+                sendBtn.disabled = false;
+            }
+        }
+        
+        // 🛠️ FUNGSI BANTUAN
+        function showResult(message, isSuccess) {
+            const resultBox = document.getElementById('resultBox');
+            resultBox.style.display = 'block';
+            resultBox.innerHTML = message;
+            resultBox.className = isSuccess ? 'result-box result-success' : 'result-box result-error';
+        }
+        
+        function addEmoji(emoji) {
+            const emojiInput = document.getElementById('emojis');
+            const current = emojiInput.value;
+            
+            if (current === '') {
+                emojiInput.value = emoji;
+            } else {
+                // Tambahkan koma jika belum ada di akhir
+                const lastChar = current.slice(-1);
+                const separator = (lastChar === ',' || lastChar === '') ? ' ' : ', ';
+                emojiInput.value = current + separator + emoji;
+            }
+        }
+        
+        // 🚀 INISIALISASI
+        window.onload = function() {
+            checkStatus();
+            
+            // Auto-check status setiap 5 detik
+            setInterval(checkStatus, 5000);
+            
+            // Contoh URL placeholder
+            document.getElementById('chatUrl').placeholder = 
+                `Contoh: https://wa.me/6281234567890`;
+        };
+    </script>
+</body>
+</html>
